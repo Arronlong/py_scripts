@@ -29,12 +29,26 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+    - name: Install SeleniumBase
+      run: |
+        python setup.py install
+    # - name: Lint with flake8
+    #  run: |
+    #    pip install flake8
+    #    # Stop the build if there are flake8 issues
+    #    flake8 . --count --show-source --statistics --exclude=temp
+    - name: Install Chrome and Firefox
+      run: |
+        sudo apt install google-chrome-stable
+        sudo apt-get install firefox
+    - name: Install chromedriver and geckodriver (Firefox Webdriver)
+      run: |
+        seleniumbase install chromedriver
+        seleniumbase install geckodriver
     
     # HostLoc 赚积分
     - name: 'HostLoc Get points'
       env:
-        HOSTLOC_COOKIE_SALTKEY : ${{ secrets.HOSTLOC_COOKIE_SALTKEY  }}
-        HOSTLOC_COOKIE_AUTH: ${{ secrets.HOSTLOC_COOKIE_AUTH }}
         NOTIFY_URL: ${{ secrets.NOTIFY_URL }}
         HOSTLOC_USERNAME: ${{ secrets.HOSTLOC_USERNAME }}
         HOSTLOC_PASSWORD: ${{ secrets.HOSTLOC_PASSWORD }}

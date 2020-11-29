@@ -15,7 +15,7 @@ python脚本集，支持selenium，基于[SeleniumBase](https://github.com/selen
 当前功能：
 
 1. [TextNow保号](<https://github.com/Arronlong/py_scripts/tree/master/scripts/textnow>)
-2. [HostLoc赚积分【基于Cookie】](<https://github.com/Arronlong/py_scripts/tree/master/scripts/hostloc>)
+2. [HostLoc赚积分【基于SeleniumBase】](<https://github.com/Arronlong/py_scripts/tree/master/scripts/hostloc>)（[模拟登陆](https://github.com/Arronlong/py_scripts/blob/master/scripts/hostloc/README_py_login.md)和[基于cookie](https://github.com/Arronlong/py_scripts/blob/master/scripts/hostloc/README_py_cookie.md)的脚本均已失效）
 3. [天翼云盘签到+抽奖](<https://github.com/Arronlong/py_scripts/tree/master/scripts/C189>)
 
 功能对应的参数，请点击后自行查看。

@@ -214,5 +214,5 @@ class Textnow:
       
     print (u'处理完毕---end')
     
-    driver.close()
+    driver.quit()
     

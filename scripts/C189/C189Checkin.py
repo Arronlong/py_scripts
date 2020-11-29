@@ -37,7 +37,7 @@ def main():
     response = s.get(url,headers=headers)
     try:
       if ("errorCode" in response.text):
-          print(response.json()['errorCode'])
+          print(f"抽奖1失败："+response.json()['errorCode'])
       elif (response.json().has_key('description')):
           description = response.json()['description']
           print(f"抽奖获得{description}")
@@ -47,7 +47,7 @@ def main():
     try:
       response2 = s.get(url2,headers=headers)
       if ("errorCode" in response2.text):
-          print(response.json()['errorCode'])
+          print(f"抽奖2失败："+response.json()['errorCode'])
       elif (response2.json().has_key('description')):
           description = response2.json()['description']
           print(f"抽奖2获得{description}")
