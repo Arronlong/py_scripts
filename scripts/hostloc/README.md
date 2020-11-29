@@ -3,11 +3,13 @@
 由于HostLoc对于登录进行各种防护处理，导致[旧脚本](https://github.com/Arronlong/py_scripts/blob/master/scripts/hostloc/README-old.md)失灵。故新版脚本将采用基于Cookie的方式来赚取积分。
 
 ## 使用说明
-Fork 本仓库，然后点击你的仓库右上角的 Settings，找到 Secrets 这一项，添加两个秘密环境变量，以及一个可选变量。
+Fork 本仓库，然后点击你的仓库右上角的 Settings，找到 Secrets 这一项，添加多个秘密环境变量，以及一个可选变量。
 
 ![image-20200716203026884](https://cdn.jsdelivr.net/gh/Arronlong/cdn/blogImg/20200716203026.png)
 
-其中 `HOSTLOC_COOKIE_SALTKEY` 存放你在 Hostloc 的Cookie中的hkCM_2132_saltkey值，`HOSTLOC_COOKIE_AUTH` 存放Cookie中的hkCM_2132_auth的值。支持同时添加多个帐户，数据之间用半角逗号 `,` 隔开即可，二者需一一对应。找Cookie的方式如图所示（先打开网站并登录成功，然后打开开发者工具F12）：
+傻瓜式，只需提供一个统一变量HOSTLOC_COOKIE，存放所有的Cookie串，多账号通过【换行】区分。
+
+或者提供明确的Cookie变量，其中 `HOSTLOC_COOKIE_SALTKEY` 存放你在 Hostloc 的Cookie中的hkCM_2132_saltkey值，`HOSTLOC_COOKIE_AUTH` 存放Cookie中的hkCM_2132_auth的值，HOSTLOC_COOKIE_CL7对应Cookie中的cL7的值。支持同时添加多个帐户，数据之间用半角逗号 `,` 隔开即可，二者需一一对应。找Cookie的方式如图所示（先打开网站并登录成功，然后打开开发者工具F12）：
 
 ![](https://cdn.jsdelivr.net/gh/Arronlong/cdn/blogImg/20200716202544.png)
 
