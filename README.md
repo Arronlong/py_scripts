@@ -19,7 +19,7 @@ python脚本集，支持selenium，基于[SeleniumBase](https://github.com/selen
 3. [天翼云盘签到+抽奖](<https://github.com/Arronlong/py_scripts/tree/master/scripts/C189>)
 4. [EUserv续订](<https://github.com/Arronlong/py_scripts/tree/master/scripts/euserv>)
 
-功能对应的参数，请点击后自行查看。
+功能对应的参数，请点击后自行查看
 
 根据需要自行修改.github/workflows/actions.yml进行任务定制
 
