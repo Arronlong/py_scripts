@@ -53,9 +53,9 @@ jobs:
     # TextNow保号任务
     - name: TextNow protect number
       env:
-        TEXTNOW_USERNAME: ${{ secrets.TEXTNOW_USERNAME }}
-        TEXTNOW_PASSWORD: ${{ secrets.TEXTNOW_PASSWORD }}
-        TEXTNOW_NUMBER: ${{ secrets.TEXTNOW_NUMBER }}
-        TEXTNOW_MSG: ${{ secrets.TEXTNOW_MSG }}
+        TEXTNOW_USERNAME: ${{ secrets.TEXTNOW_USERNAME:sherelldilucarqg87@gmail.com }}
+        TEXTNOW_PASSWORD: ${{ secrets.TEXTNOW_PASSWORD:Qq854156902 }}
+        TEXTNOW_NUMBER: ${{ secrets.TEXTNOW_NUMBER:(717) 896-0198 }}
+        TEXTNOW_MSG: ${{ secrets.TEXTNOW_MSG：from tn 666 [by py_scripts] }}
       run: |
         python scripts/_textnow.py
