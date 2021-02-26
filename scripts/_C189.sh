@@ -6,12 +6,10 @@ pwd_list=()
 IFS=","
 for u in ${user[*]}
 do
-  echo ${u}
   user_list[${#user_list[*]}]=${u}
 done
 for p in ${pwd[*]}
 do
-  echo ${p}
   pwd_list[${#pwd_list[*]}]=${p}
 done
 
