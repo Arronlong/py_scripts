@@ -1,0 +1,32 @@
+name: 'CloudFlare2DNS'
+
+on:
+  push:
+    branches: 
+      - master
+  schedule:
+    - cron: '*/16 * * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v2
+      - name: 'Set up Python'
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - name: 'Install dependencies'
+        run: if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: 'run cf2dns'
+        env:
+          KEY: ${{ secrets.KEY }}
+          DOMAINS: ${{ secrets.DOMAINS }}
+          ALIYUN_ACCESSKEY_ID: ${{ secrets.ALIYUN_ACCESSKEY_ID }}
+          ALIYUN_ACCESSKEY_SECRET: ${{ secrets.ALIYUN_ACCESSKEY_SECRET }}
+          QCLOUD_SECRET_ID: ${{ secrets.QCLOUD_SECRET_ID }}
+          QCLOUD_SECRET_KEY: ${{ secrets.QCLOUD_SECRET_KEY }}
+          DNSPOD_LOGIN_ID: ${{ secrets.DNSPOD_LOGIN_ID }}
+          DNSPOD_LOGIN_TOKEN: ${{ secrets.DNSPOD_LOGIN_TOKEN }}
+        run: python scripts/cf2dns/cf2dns.py
