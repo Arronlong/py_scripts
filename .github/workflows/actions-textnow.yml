@@ -1,4 +1,4 @@
-name: py_scripts
+name: 'TextNow Protect Number'
 
 on:
   push:
@@ -8,15 +8,15 @@ on:
   schedule:
     # 时间是按UTC设置的，实际执行时间，则自动按东八区执行
     # 即+8小时，故实际执行时间为：8点，20点
-    - cron: 0 4 ? * 1,4
-      
+    - cron: 0 0,12 * * *
+
 jobs:
   textnow:
     runs-on: ubuntu-18.04
     strategy:
       max-parallel: 5
       matrix:
-        python-version: [3.7]
+        python-version: [3.8]
         #python-version: [2.7, 3.5, 3.6, 3.7, 3.8]
 
     steps:
@@ -48,14 +48,24 @@ jobs:
     #- name: Make sure pytest is working
     #  run: |
     #    echo "def test_1(): pass" > nothing.py
-    #    pytest nothing.py    
-   
+    #    pytest nothing.py
+    - name: Cache Cookies
+      uses: actions/cache@v2
+      with:
+        path: ~/cache.tgz
+        key: ${{ github.repository_owner }}_${{ github.run_id }}
+        restore-keys: ${{ github.repository_owner }}_
+        
     # TextNow保号任务
-    - name: textnow protect number
+    - name: TextNow protect number
       env:
         TEXTNOW_USERNAME: ${{ secrets.TEXTNOW_USERNAME }}
         TEXTNOW_PASSWORD: ${{ secrets.TEXTNOW_PASSWORD }}
+        TEXTNOW_COOKIES: ${{ secrets.TEXTNOW_COOKIES }}
         TEXTNOW_NUMBER: ${{ secrets.TEXTNOW_NUMBER }}
         TEXTNOW_MSG: ${{ secrets.TEXTNOW_MSG }}
       run: |
+        mkdir .cache
+        if [ -e ~/cache.tgz ]; then tar zxf ~/cache.tgz; fi
         python scripts/_textnow.py
+        tar zcf ~/cache.tgz .cache
