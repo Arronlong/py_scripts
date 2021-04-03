@@ -29,4 +29,6 @@ jobs:
           QCLOUD_SECRET_KEY: ${{ secrets.QCLOUD_SECRET_KEY }}
           DNSPOD_LOGIN_ID: ${{ secrets.DNSPOD_LOGIN_ID }}
           DNSPOD_LOGIN_TOKEN: ${{ secrets.DNSPOD_LOGIN_TOKEN }}
+          HW_ACCESSKEY_ID: ${{ secrets.HW_ACCESSKEY_ID }}
+          HW_ACCESSKEY_SECRET: ${{ secrets.HW_ACCESSKEY_SECRET }}
         run: python scripts/cf2dns/cf2dns.py
