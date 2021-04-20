@@ -106,7 +106,7 @@ setup(
         'selenium==3.141.0',
         'pluggy==0.13.1',
         'attrs>=19.3.0',
-        'py==1.8.1',
+        'py==1.10.0',
         'pytest==4.6.11;python_version<"3.5"',
         'pytest==5.4.3;python_version>="3.5"',
         'pytest-cov==2.10.0',
