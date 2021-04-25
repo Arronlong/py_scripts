@@ -29,7 +29,7 @@ class HWCloudApi:
         url = 'https://dns.myhuaweicloud.com/v2/zones?type=public'
         r = signer.HttpRequest('GET', url)
         self.sign.Sign(r)
-        res = json.loads(requests.get(url, headers=r.headers).text.decode('utf-8'))
+        res = json.loads(requests.get(url, headers=r.headers).content.decode('utf-8','ignore'))
         # print(res)
         zone_id = ''
         for i in range(0, len(res['zones'])):
@@ -58,7 +58,7 @@ class HWCloudApi:
         resp = requests.delete(url, headers=r.headers)
         try:
           resp.raise_for_status()
-          res = json.loads(resp.text.decode('utf-8'))
+          res = json.loads(resp.content.decode('utf-8','ignore'))
         except HTTPError as httpError:
           response_status_code = httpError.response.status_code
           #response_header_params = httpError.response.headers
@@ -96,7 +96,7 @@ class HWCloudApi:
         resp = requests.get(url, headers=r.headers)
         try:
           resp.raise_for_status()
-          res = json.loads(resp.text.decode('utf-8'))
+          res = json.loads(resp.content.decode('utf-8','ignore'))
         except:
           pass
         
@@ -167,7 +167,7 @@ class HWCloudApi:
         resp = requests.post(url, headers=r.headers, data=r.body)
         try:
           resp.raise_for_status()
-          res = json.loads(resp.text.decode('utf-8'))
+          res = json.loads(resp.content.decode('utf-8','ignore'))
         except HTTPError as httpError:
           response_status_code = httpError.response.status_code
           #response_header_params = httpError.response.headers
@@ -210,7 +210,7 @@ class HWCloudApi:
         resp = requests.put(url, headers=r.headers, data=r.body)
         try:
           resp.raise_for_status()
-          res = json.loads(resp.text.decode('utf-8'))
+          res = json.loads(resp.content.decode('utf-8','ignore'))
         except HTTPError as httpError:
           response_status_code = httpError.response.status_code
           #response_header_params = httpError.response.headers

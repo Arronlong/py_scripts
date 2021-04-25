@@ -23,6 +23,7 @@ jobs:
         env:
           KEY: ${{ secrets.KEY }}
           DOMAINS: ${{ secrets.DOMAINS }}
+          CFIP_API_HOST: ${{ secrets.CFIP_API_HOST }}
           ALIYUN_ACCESSKEY_ID: ${{ secrets.ALIYUN_ACCESSKEY_ID }}
           ALIYUN_ACCESSKEY_SECRET: ${{ secrets.ALIYUN_ACCESSKEY_SECRET }}
           QCLOUD_SECRET_ID: ${{ secrets.QCLOUD_SECRET_ID }}

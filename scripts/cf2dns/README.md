@@ -36,7 +36,23 @@
    >   
    >   ![image-20201213223737840](https://cdn.jsdelivr.net/gh/Arronlong/cdn@master/blogImg/20201213223737.png)
    >   
-   > - **KEY**：API密钥，免费的KEY： `o1zrmHAF` ，使用这个Key是历史优选的Cloudflare IP(也可以从这个[网站](https://stock.hostmonit.com/CloudFlareYes)查到IP的信息)，也可以在[原作者的商店](https://shop.hostmonit.com/)购买KEY，可以获取近15分钟内获取到的对各运营商速度最优的的Cloudflare IP
+   > - **KEY**：API密钥，免费的KEY： `o1zrmHAF`或`iDetkOys` ，使用这个Key是历史优选的Cloudflare IP(也可以从这个[网站](https://stock.hostmonit.com/CloudFlareYes)查到IP的信息)，也可以在[原作者的商店](https://shop.hostmonit.com/)购买KEY，可以获取近15分钟内获取到的对各运营商速度最优的的Cloudflare IP
+   >
+   > - **CFIP_API_HOST**：【可选参数】，API默认采用api.hostmonit.com域名提供的。如果获取ip失败，那就套一层cf吧，这里填写套cf后的域名。cf workers代码如下：
+   >
+   >   ```javascript
+   >   addEventListener(
+   >     "fetch", event => {
+   >       let url = new URL(event.request.url);
+   >       url.host = "api.hostmonit.com";
+   >       let request = new Request(url, event.request);
+   >       event.respondWith(
+   >         fetch(request)
+   >       )
+   >     }
+   >   )
+   >   ```
+   >   
    >
    > - **ALIYUN_ACCESSKEY_ID** 和 **ALIYUN_ACCESSKEY_SECRET** ：如果域名在阿里云则需要创建这2个参数。登录[阿里云后台](https://help.aliyun.com/document_detail/53045.html?spm=a2c4g.11186623.2.11.2c6a2fbdh13O53)获取AccessKey ID和AccessKey Secret，如果创建的是子用户，记得为子用户添加权限：**AliyunDNSFullAccess**。
    >
