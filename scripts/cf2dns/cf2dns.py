@@ -112,6 +112,63 @@ def getDnsApi(dns):
     return HWCloudApi()
   return None
 
+def changeip(dns, domains, cfips):
+  try:
+    cf_cmips = cfips["info"]["CM"]
+    cf_cuips = cfips["info"]["CU"]
+    cf_ctips = cfips["info"]["CT"]
+    temp_cf_cmips = cf_cmips.copy()
+    temp_cf_cuips = cf_cuips.copy()
+    temp_cf_ctips = cf_ctips.copy()
+    cloud = getDnsApi(dns)
+    for domain, sub_domains in domains.items():
+      for sub_domain, lines in sub_domains.items():
+        # {
+        #   "data":{
+        #     "records":[
+        #       {
+        #         "id":"record_id",
+        #         "line":"线路",
+        #         "value":"ip值"
+        #       }
+        #     ]
+        #   }
+        # }
+        # 获取A类型的域名解析
+        ret = cloud.get_record(domain, 100, sub_domain, "A")
+        
+        # DNS服务器，每个线路可以配置2条解析记录
+        cm_info = []
+        cu_info = []
+        ct_info = []
+        for record in ret['data']['records']:
+          if record["line"] == "移动":
+            info = {}
+            info["recordId"] = record["id"]
+            info["value"] = record["value"]
+            cm_info.append(info)
+          if record["line"] == "联通":
+            info = {}
+            info["recordId"] = record["id"]
+            info["value"] = record["value"]
+            cu_info.append(info)
+          if record["line"] == "电信":
+            info = {}
+            info["recordId"] = record["id"]
+            info["value"] = record["value"]
+            ct_info.append(info)
+        for line in lines:
+          if line == "CM":
+            changeDNS("CM", cm_info, temp_cf_cmips, domain, sub_domain, cloud)
+          elif line == "CU":
+            changeDNS("CU", cu_info, temp_cf_cuips, domain, sub_domain, cloud)
+          elif line == "CT":
+            changeDNS("CT", ct_info, temp_cf_ctips, domain, sub_domain, cloud)
+  except Exception as e:
+    traceback.print_exc()  
+    log_cf2dns.logger.error("CHANGE DNS ERROR: ----Time: " + str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())) + "----MESSAGE: " + str(e))
+
+  
 def main():
   global AFFECT_NUM
   if len(DOMAINS) > 0:
@@ -120,57 +177,13 @@ def main():
       if cfips == None or cfips["code"] != 200:
         log_cf2dns.logger.error("GET CLOUDFLARE IP ERROR: ----Time: " + str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())) + "----MESSAGE: " + str(cfips["info"]))
         return
-      cf_cmips = cfips["info"]["CM"]
-      cf_cuips = cfips["info"]["CU"]
-      cf_ctips = cfips["info"]["CT"]
-      temp_cf_cmips = cf_cmips.copy()
-      temp_cf_cuips = cf_cuips.copy()
-      temp_cf_ctips = cf_ctips.copy()
-      for dns, domains in DOMAINS.items():
+      for dns, domainlist in DOMAINS.items():
         cloud = getDnsApi(dns)
-        for domain, sub_domains in domains.items():
-          for sub_domain, lines in sub_domains.items():
-            # {
-            #   "data":{
-            #     "records":[
-            #       {
-            #         "id":"record_id",
-            #         "line":"线路",
-            #         "value":"ip值"
-            #       }
-            #     ]
-            #   }
-            # }
-            # 获取A类型的域名解析
-            ret = cloud.get_record(domain, 100, sub_domain, "A")
-            
-            # DNS服务器，每个线路可以配置2条解析记录
-            cm_info = []
-            cu_info = []
-            ct_info = []
-            for record in ret['data']['records']:
-              if record["line"] == "移动":
-                info = {}
-                info["recordId"] = record["id"]
-                info["value"] = record["value"]
-                cm_info.append(info)
-              if record["line"] == "联通":
-                info = {}
-                info["recordId"] = record["id"]
-                info["value"] = record["value"]
-                cu_info.append(info)
-              if record["line"] == "电信":
-                info = {}
-                info["recordId"] = record["id"]
-                info["value"] = record["value"]
-                ct_info.append(info)
-            for line in lines:
-              if line == "CM":
-                changeDNS("CM", cm_info, temp_cf_cmips, domain, sub_domain, cloud)
-              elif line == "CU":
-                changeDNS("CU", cu_info, temp_cf_cuips, domain, sub_domain, cloud)
-              elif line == "CT":
-                changeDNS("CT", ct_info, temp_cf_ctips, domain, sub_domain, cloud)
+        if isinstance(domainlist, list):
+          for domains in domainlist:
+            changeip(dns, domains, cfips)
+        else:
+          changeip(dns, domainlist, cfips)
     except Exception as e:
       traceback.print_exc()  
       log_cf2dns.logger.error("CHANGE DNS ERROR: ----Time: " + str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())) + "----MESSAGE: " + str(e))
