@@ -135,7 +135,7 @@ class HWCloudApi:
 
     # 创建解析记录，domain为主域名，sub_domain为子域名，value为记录值，可以列表形式传入多个值,line为线路，为了适配，传入电信/联通/移动即可
     # ttl为生效时间，华为云不限制ttl，默认为300s，最小可1s
-    def create_record(self, domain: str, sub_domain: str, value: list, record_type: str, line: str, ttl: int):
+    def create_record(self, domain: str, sub_domain: str, value: list, record_type: str, line: strzz, ttl: int=300):
         zone_id = self.get_zone_id(domain)
         if zone_id != "The domain doesn't exist":
             url = 'https://dns.myhuaweicloud.com/v2.1/zones/' + zone_id + '/recordsets'
@@ -188,7 +188,7 @@ class HWCloudApi:
         return data
 
     # 更改解析记录，domain为主域名，record为解析记录的id，该id可用get_record函数取得，value为记录值，ttl为生效时间。
-    def change_record(self, domain: str, record_id: str, value: str, ttl: int):
+    def change_record(self, domain: str, record_id: str, value: str, ttl: int=300):
         zone_id = self.get_zone_id(domain)
         if zone_id != "The domain doesn't exist":
             url = 'https://dns.myhuaweicloud.com/v2.1/zones/' + zone_id + '/recordsets/' + record_id
