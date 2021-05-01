@@ -37,7 +37,7 @@ def get_optimization_ip():
     data = {"key": KEY}
     data = json.dumps(data).encode()
     url = 'https://api.hostmonit.com/get_optimization_ip'
-    if os.environ["CFIP_API_HOST"]:
+    if os.getenv("CFIP_API_HOST"):
       url = os.environ["CFIP_API_HOST"]
     response = http.request('POST', url=url, body=data, headers=headers)
     return json.loads(response.data.decode('utf-8'))
@@ -136,7 +136,6 @@ def changeip(dns, domains, cfips):
         # }
         # 获取A类型的域名解析
         ret = cloud.get_record(domain, 100, sub_domain, "A")
-        
         # DNS服务器，每个线路可以配置2条解析记录
         cm_info = []
         cu_info = []
@@ -178,7 +177,6 @@ def main():
         log_cf2dns.logger.error("GET CLOUDFLARE IP ERROR: ----Time: " + str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())) + "----MESSAGE: " + str(cfips["info"]))
         return
       for dns, domainlist in DOMAINS.items():
-        cloud = getDnsApi(dns)
         if isinstance(domainlist, list):
           for domains in domainlist:
             changeip(dns, domains, cfips)

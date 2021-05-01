@@ -77,7 +77,7 @@ class HWCloudApi:
         #except:
         #    return res
         data = {}
-        data["result"] = 'id' in ret
+        data["result"] = 'id' in res
         data["message"] = res['status']
         if data["message"] == 'PENDING_DELETE':
           data["message"] = 'success'
@@ -118,9 +118,16 @@ class HWCloudApi:
             #由于华为api的查询参数无法对subdomain和type进行过滤，所以只能在结果中进行判断
             if res['recordsets'][i]['name'].split('.')[0] == sub_domain and res['recordsets'][i]['type'] == record_type and len(res['recordsets'][i]['records'])>0:
               for ip in res['recordsets'][i]['records']:
+                line = res['recordsets'][i]['line']
+                if line == 'Dianxin':
+                    line = '电信'
+                elif line == 'Liantong':
+                    line = '联通'
+                elif line == 'Yidong':
+                    line = '移动'
                 records.append({
                   'id':res['recordsets'][i]['id'],
-                  'line':res['recordsets'][i]['line'],
+                  'line':line,
                   'value':ip
                 })
         except:
@@ -135,24 +142,24 @@ class HWCloudApi:
 
     # 创建解析记录，domain为主域名，sub_domain为子域名，value为记录值，可以列表形式传入多个值,line为线路，为了适配，传入电信/联通/移动即可
     # ttl为生效时间，华为云不限制ttl，默认为300s，最小可1s
-    def create_record(self, domain: str, sub_domain: str, value: list, record_type: str, line: str, ttl: int=300):
+    def create_record(self, domain: str, sub_domain: str, value: str, record_type: str, line: str, ttl: int=300):
         zone_id = self.get_zone_id(domain)
         if zone_id != "The domain doesn't exist":
             url = 'https://dns.myhuaweicloud.com/v2.1/zones/' + zone_id + '/recordsets'
         else:
             return "The domain doesn't exist"
-        #if line == '电信':
-        #    line = 'Dianxin'
-        #elif line == '联通':
-        #    line = 'Liantong'
-        #elif line == '移动':
-        #    line = 'Yidong'
-        ips = []
-        ips.append(value)
+        if line == '电信':
+            line = 'Dianxin'
+        elif line == '联通':
+            line = 'Liantong'
+        elif line == '移动':
+            line = 'Yidong'
         data = {
+            "description": "",
+            "weight": 1,
             "line": line,
             "name": sub_domain + '.' + domain,
-            "records": value,
+            "records": [value],
             "ttl": ttl,
             "type": record_type
         }
@@ -165,6 +172,7 @@ class HWCloudApi:
         #   "message":{...}
         # }
         resp = requests.post(url, headers=r.headers, data=r.body)
+        #print(resp.content)
         try:
           resp.raise_for_status()
           res = json.loads(resp.content.decode('utf-8','ignore'))
@@ -181,23 +189,26 @@ class HWCloudApi:
           pass
         
         data = {}
-        data["result"] = 'id' in ret
+        data["result"] = 'id' in res
         data["message"] = res['status']
         if data["message"] == 'PENDING_DELETE':
           data["message"] = 'success'
         return data
 
     # 更改解析记录，domain为主域名，record为解析记录的id，该id可用get_record函数取得，value为记录值，ttl为生效时间。
-    def change_record(self, domain: str, record_id: str, value: str, ttl: int=300):
+    def change_record(self, domain: str, record_id: str, sub_domain: str, value: str, record_type: str, line: str, ttl: int=300):
         zone_id = self.get_zone_id(domain)
         if zone_id != "The domain doesn't exist":
             url = 'https://dns.myhuaweicloud.com/v2.1/zones/' + zone_id + '/recordsets/' + record_id
         else:
             return "The domain doesn't exist"
         data = {
-            "records": [
-                value
-            ],
+            "description": "",
+            "weight": 1,
+            #"line": line, # 不允许修改路线
+            "name": sub_domain + '.' + domain,
+            "type": record_type,
+            "records": [value],
             "ttl": ttl,
         }
         r = signer.HttpRequest('PUT', url, body=json.dumps(data))
@@ -224,7 +235,7 @@ class HWCloudApi:
           pass
         
         data = {}
-        data["result"] = 'id' in ret
+        data["result"] = 'id' in res
         data["message"] = res['status']
         if data["message"] == 'PENDING_DELETE':
           data["message"] = 'success'
