@@ -116,7 +116,7 @@ class HWCloudApi:
         try:
           for i in range(0, len(res['recordsets'])):
             #由于华为api的查询参数无法对subdomain和type进行过滤，所以只能在结果中进行判断
-            if res['recordsets'][i]['name'].split('.')[0] == sub_domain and res['recordsets'][i]['type'] == record_type and len(res['recordsets'][i]['records'])>0:
+            if (res['recordsets'][i]['name'].split('.')[0] == sub_domain or (res['recordsets'][i]['name'].startswith(domain) and "@" == sub_domain)) and res['recordsets'][i]['type'] == record_type and len(res['recordsets'][i]['records'])>0:
               for ip in res['recordsets'][i]['records']:
                 line = res['recordsets'][i]['line']
                 if line == 'Dianxin':
@@ -158,7 +158,7 @@ class HWCloudApi:
             "description": "",
             "weight": 1,
             "line": line,
-            "name": sub_domain + '.' + domain,
+            "name": domain if "@" == sub_domain else (sub_domain + '.' + domain),
             "records": [value],
             "ttl": ttl,
             "type": record_type
@@ -206,7 +206,7 @@ class HWCloudApi:
             "description": "",
             "weight": 1,
             #"line": line, # 不允许修改路线
-            "name": sub_domain + '.' + domain,
+            "name": domain if "@" == sub_domain else (sub_domain + '.' + domain),
             "type": record_type,
             "records": [value],
             "ttl": ttl,
